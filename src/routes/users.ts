@@ -13,7 +13,8 @@ const router = Router();
 import { isAuth } from '../middleware/isAuth';
 
 // PATH IS: /users (app.use("/users", usersRoutes);)
-router.get('/', isAuth, getUsers);
+// router.get('/', isAuth, getUsers);
+router.get('/', getUsers);
 router.post('/login', loginUser);
 router.post('/', postUser);
 router.put('/:id', updateUser);

@@ -56,7 +56,6 @@ exports.getUsers = getUsers;
 // LOGIN ****************************************
 // TOKEN will be created here.
 const loginUser = async (req, res, next) => {
-    console.log('********** LOGIN!');
     const email = req.body.email;
     const password = req.body.password;
     try {
@@ -96,7 +95,6 @@ const loginUser = async (req, res, next) => {
 exports.loginUser = loginUser;
 // CREATE USER ****************************************
 const postUser = async (req, res, next) => {
-    console.log('********** CADASTRO!');
     const name = req.body.name;
     const email = req.body.email;
     const telephone = req.body.telephone;
@@ -131,9 +129,6 @@ const postUser = async (req, res, next) => {
     });
     try {
         const newUser = await user.save();
-        res
-            .status(201)
-            .json({ message: 'Usuário criado com sucesso!', newUser: newUser });
         // WRITING / SAVING INFOS to a local file (on the backend root folder):
         // Getting the IP from the request:
         const ip = req.socket.remoteAddress;
@@ -162,7 +157,9 @@ const postUser = async (req, res, next) => {
         // flag: "a" means that NEW data will be added:
         // If doesn't work, try: flags: "a"
         { flag: 'a' });
-        return;
+        return res
+            .status(201)
+            .json({ message: 'Usuário criado com sucesso!', newUser: newUser });
     }
     catch (err) {
         return res
@@ -185,12 +182,6 @@ const updateUser = async (req, res, next) => {
             return res
                 .status(404)
                 .json({ message: 'Usuário com essa ID não encontrado!' });
-        }
-        if (user.name === name &&
-            user.email === email &&
-            user.telephone === telephone) {
-            // 400: Bad Request
-            return res.status(400).json({ message: 'Nenhuma mudança foi efetuada!' });
         }
         // CHECKING if new email is already registered:
         if (email !== user.email) {
@@ -217,6 +208,7 @@ const updateUser = async (req, res, next) => {
         user.email = email;
         user.telephone = telephone;
         try {
+            // it will update the existing one, not create a new one:
             const userUpdated = await user.save();
             return res.status(201).json({
                 message: 'Informações atualizadas!',

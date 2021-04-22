@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface User extends Document {
   name: string;
@@ -19,5 +19,5 @@ export const UserSchema = new Schema({
   deleted: { type: Boolean, default: false },
 });
 
-const User = mongoose.model<User>("User", UserSchema);
+const User = mongoose.model<User>('User', UserSchema);
 export default User;

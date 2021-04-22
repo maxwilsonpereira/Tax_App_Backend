@@ -30,5 +30,5 @@ exports.UserSchema = new mongoose_1.Schema({
     deletedAt: { type: Date, default: null },
     deleted: { type: Boolean, default: false },
 });
-const User = mongoose_1.default.model("User", exports.UserSchema);
+const User = mongoose_1.default.model('User', exports.UserSchema);
 exports.default = User;
