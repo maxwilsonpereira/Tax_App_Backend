@@ -27,7 +27,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(helmet()); // middleware that will add security headers
 
 // options for cors midddleware
-const options: cors.CorsOptions = {
+const corsOptions: cors.CorsOptions = {
   allowedHeaders: [
     'Origin',
     'X-Requested-With',
@@ -46,8 +46,9 @@ const options: cors.CorsOptions = {
   //   origin: API_URL, // PRODUCTION MODE
   preflightContinue: false,
 };
-app.use(cors(options));
+// app.use(cors(corsOptions ));
 // app.options("*", cors(options)); // enable pre-flight
+app.use(cors());
 
 app.use('/users', userRouter);
 
