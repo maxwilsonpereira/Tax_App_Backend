@@ -28,44 +28,48 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = require("body-parser");
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv = __importStar(require("dotenv"));
+// https://www.npmjs.com/package/cors
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const morgan_1 = __importDefault(require("morgan"));
 const fs_1 = __importDefault(require("fs")); // file system (read, create, uodate, delete, rename files)
 const path_1 = __importDefault(require("path")); // provides a way of working with directories and file paths
 const users_1 = __importDefault(require("./routes/users"));
+const emails_1 = __importDefault(require("./routes/emails"));
 const app = express_1.default();
 app.use(body_parser_1.json());
 dotenv.config();
 // saving login infos with morgan
-const accessLogStream = fs_1.default.createWriteStream(path_1.default.join(__dirname, "access.log"), 
+const accessLogStream = fs_1.default.createWriteStream(path_1.default.join(__dirname, 'access.log'), 
 // flags: "a" means that NEW data will be added
-{ flags: "a" });
-app.use(morgan_1.default("combined", { stream: accessLogStream }));
+{ flags: 'a' });
+app.use(morgan_1.default('combined', { stream: accessLogStream }));
 app.use(helmet_1.default()); // middleware that will add security headers
-// options for cors midddleware
-const options = {
-    allowedHeaders: [
-        "Origin",
-        "X-Requested-With",
-        "Content-Type",
-        "Accept",
-        "X-Access-Token",
-        // "Access-Control-Allow-Origin",
-        // "ssid",
-        // Authorization MUST BE ENABLED TO USE AUTHENTICATION:
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization",
-    ],
-    credentials: true,
-    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
-    origin: "*",
-    //   origin: API_URL, // PRODUCTION MODE
-    preflightContinue: false,
-};
-app.use(cors_1.default(options));
-// app.options("*", cors(options)); // enable pre-flight
-app.use("/users", users_1.default);
+// // options for cors midddleware:
+// const corsOptions: cors.CorsOptions = {
+//   allowedHeaders: [
+//     'Origin',
+//     'X-Requested-With',
+//     'Content-Type',
+//     'Accept',
+//     'X-Access-Token',
+//     // "Access-Control-Allow-Origin",
+//     // "ssid",
+//     // Authorization MUST BE ENABLED TO USE AUTHENTICATION:
+//     'Access-Control-Allow-Headers',
+//     'Content-Type, Authorization',
+//   ],
+//   credentials: true,
+//   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+//   origin: '*', // DEV MODE
+//   //  origin: API_URL, // PRODUCTION MODE
+//   preflightContinue: false,
+// };
+// app.use(cors(corsOptions));
+// // app.options("*", cors(options)); // enable pre-flight
+app.use(cors_1.default());
+app.use('/users', users_1.default);
+app.use('/emails', emails_1.default);
 // ERROR HANDLER MIDDLEWARE will be fired if ANY ERROR occurs
 app.use((err, req, res, next) => {
     res.status(400).json({ message: err.message });
@@ -84,6 +88,6 @@ mongoose_1.default
 })
     .then((result) => {
     app.listen(process.env.PORT || 8080);
-    console.log("API simulator running at port 8080");
+    console.log('API simulator running at port 8080');
 })
     .catch((err) => console.log(err));

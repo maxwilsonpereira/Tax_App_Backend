@@ -233,6 +233,9 @@ const updatePassword = async (req, res, next) => {
     const passwordCur = req.body.password;
     const passwordNew = req.body.passwordNew;
     const userId = req.params.id;
+    console.log('************************** passwordCur', passwordCur);
+    console.log('************************** passwordNew', passwordNew);
+    console.log('************************** userId', userId);
     try {
         const user = await user_1.default.findById(userId);
         if (!user) {
@@ -241,38 +244,26 @@ const updatePassword = async (req, res, next) => {
                 .status(404)
                 .json({ message: 'Usuário com essa ID não encontrado!' });
         }
-        if (passwordCur === passwordNew) {
-            // 400: Bad request
-            return res
-                .status(400)
-                .json({ message: 'Senha nova igual a senha atual!' });
-        }
         const isPasswordEqual = await bcryptjs_1.default.compare(passwordCur, user.password);
         if (!isPasswordEqual) {
-            return res.status(500).json({ message: 'A senha não confere!' });
+            // 403: FORBIDDEN
+            return res.status(403).json({ message: 'A senha não confere!' });
         }
+        // Encrypting the new password with bcryptjs:
+        const newHashedPassword = await bcryptjs_1.default.hash(passwordNew, 12);
+        // Updating the password:
+        user.password = newHashedPassword;
         try {
-            // Encrypting the new password with bcryptjs:
-            const newHashedPassword = await bcryptjs_1.default.hash(passwordNew, 12);
-            // Updating the password:
-            user.password = newHashedPassword;
-            try {
-                const userUpdated = await user.save();
-                return res.status(201).json({
-                    message: 'Senha atualizada!',
-                    userUpdated: userUpdated,
-                });
-            }
-            catch (err) {
-                return res
-                    .status(500)
-                    .json({ message: 'Internal server error! (Code: E1)' });
-            }
+            const userUpdated = await user.save();
+            return res.status(200).json({
+                message: 'Senha atualizada!',
+                userUpdated: userUpdated,
+            });
         }
         catch (err) {
             return res
                 .status(500)
-                .json({ message: 'Internal server error! (Code: E3)' });
+                .json({ message: 'Internal server error! (Code: E2)' });
         }
     }
     catch (err) {

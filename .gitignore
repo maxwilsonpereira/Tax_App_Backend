@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+server.cert
+server.key
 
 # testing
 /coverage
@@ -22,9 +24,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# FILES
-_INFOS_MAX.txt
+# MAX
 _DEPLOYMENT.txt
+_INSTALATION_MAX.txt
 .env
 nodemon.json
 _LocalRegister.txt

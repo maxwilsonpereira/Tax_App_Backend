@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const users_1 = require("../controllers/users");
 const router = express_1.Router();
-// PATH IS: /users (app.use("/users", usersRoutes);)
+// PATH IS: /users --> app.use("/users", usersRoutes);
 // router.get('/', isAuth, getUsers);
 router.get('/', users_1.getUsers);
 router.post('/login', users_1.loginUser);

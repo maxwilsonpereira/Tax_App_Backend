@@ -11,7 +11,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import fs from 'fs'; // file system (read, create, uodate, delete, rename files)
 import path from 'path'; // provides a way of working with directories and file paths
-import userRouter from './routes/users';
+import usersRouter from './routes/users';
+import emailsRouter from './routes/emails';
 
 const app = express();
 app.use(json());
@@ -26,31 +27,32 @@ const accessLogStream = fs.createWriteStream(
 app.use(morgan('combined', { stream: accessLogStream }));
 app.use(helmet()); // middleware that will add security headers
 
-// options for cors midddleware
-const corsOptions: cors.CorsOptions = {
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'X-Access-Token',
-    // "Access-Control-Allow-Origin",
-    // "ssid",
-    // Authorization MUST BE ENABLED TO USE AUTHENTICATION:
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization',
-  ],
-  credentials: true,
-  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  origin: '*', // DEV MODE
-  //   origin: API_URL, // PRODUCTION MODE
-  preflightContinue: false,
-};
-// app.use(cors(corsOptions ));
-// app.options("*", cors(options)); // enable pre-flight
+// // options for cors midddleware:
+// const corsOptions: cors.CorsOptions = {
+//   allowedHeaders: [
+//     'Origin',
+//     'X-Requested-With',
+//     'Content-Type',
+//     'Accept',
+//     'X-Access-Token',
+//     // "Access-Control-Allow-Origin",
+//     // "ssid",
+//     // Authorization MUST BE ENABLED TO USE AUTHENTICATION:
+//     'Access-Control-Allow-Headers',
+//     'Content-Type, Authorization',
+//   ],
+//   credentials: true,
+//   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+//   origin: '*', // DEV MODE
+//   //  origin: API_URL, // PRODUCTION MODE
+//   preflightContinue: false,
+// };
+// app.use(cors(corsOptions));
+// // app.options("*", cors(options)); // enable pre-flight
 app.use(cors());
 
-app.use('/users', userRouter);
+app.use('/users', usersRouter);
+app.use('/emails', emailsRouter);
 
 // ERROR HANDLER MIDDLEWARE will be fired if ANY ERROR occurs
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

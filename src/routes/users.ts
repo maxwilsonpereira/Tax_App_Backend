@@ -12,7 +12,7 @@ import {
 const router = Router();
 import { isAuth } from '../middleware/isAuth';
 
-// PATH IS: /users (app.use("/users", usersRoutes);)
+// PATH IS: /users --> app.use("/users", usersRoutes);
 // router.get('/', isAuth, getUsers);
 router.get('/', getUsers);
 router.post('/login', loginUser);
