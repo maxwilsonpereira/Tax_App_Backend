@@ -154,7 +154,7 @@ export const postUser: RequestHandler = async (req, res, next) => {
       { flag: 'a' }
     );
     return res
-      .status(201)
+      .status(201) // 201: Created
       .json({ message: 'Usuário criado com sucesso!', newUser: newUser });
   } catch (err) {
     return res
@@ -227,10 +227,6 @@ export const updatePassword: RequestHandler = async (req, res, next) => {
   const passwordCur = req.body.password;
   const passwordNew = req.body.passwordNew;
   const userId = req.params.id;
-  console.log('************************** passwordCur', passwordCur);
-  console.log('************************** passwordNew', passwordNew);
-  console.log('************************** userId', userId);
-
   try {
     const user = await User.findById(userId);
     if (!user) {
